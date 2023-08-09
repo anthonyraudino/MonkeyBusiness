@@ -97,8 +97,12 @@ async def usergamedata_advanced(request: Request):
             single_grade = profile.get("single_grade", 0)
             double_grade = profile.get("double_grade", 0)
             opt_timing_disp = profile.get("opt_timing_disp", -1)
+
+            # BPL User Settings
             user_bpl_team_id = profile.get("user_bpl_team_id", 0)
-            # 0: 1: 2: 3:Game Panic 4:Silk Hat 5: 6: 7: 8: 
+            # Team IDs
+            # 0:Blank 1:Apina Vrames 2:GiGO 3:Game Panic
+            # 4:Silk Hat 5:SuperNova Tohoku 6:Tradz 7:Round 1 8:LeisureLand
 
             for record in db.table("ddr_scores_best").search(
                 (where("game_version") == game_version) & (where("ddr_id") == ddr_id)
@@ -117,8 +121,6 @@ async def usergamedata_advanced(request: Request):
 
         league_name = b64encode(str.encode("Monkey Business")).decode()
         current_time = round(time.time()) * 1000
-        #user_bpl_team_id = "4"
-        # 0: 1: 2: 3:Game Panic 4:Silk Hat 5: 6: 7: 8: 
         
         response = E.response(
             E.playerdata_2(
@@ -169,7 +171,7 @@ async def usergamedata_advanced(request: Request):
                     E.current(
                         E.id(1, __type="s32"),
                         E.league_name_base64(league_name, __type="str"),
-                        E.start_time(current_time, __type="u64"),
+                        E.start_time(current_time - 100000, __type="u64"),
                         E.end_time(current_time + 1000000000, __type="u64"),
                         E.summary_time(current_time, __type="u64"),
                         E.league_status(3, __type="s32"),
