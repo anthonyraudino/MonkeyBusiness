@@ -74,6 +74,7 @@ async def usergamedata_advanced(request: Request):
             "single_grade": 0,
             "double_grade": 0,
             "opt_timing_disp": -1,
+            "user_bpl_team_id": 4,
         }
 
         db.table("ddr_profile").upsert(all_profiles_for_card, where("card") == refid)
@@ -96,6 +97,8 @@ async def usergamedata_advanced(request: Request):
             single_grade = profile.get("single_grade", 0)
             double_grade = profile.get("double_grade", 0)
             opt_timing_disp = profile.get("opt_timing_disp", -1)
+            user_bpl_team_id = profile.get("user_bpl_team_id", 0)
+            # 0: 1: 2: 3:Game Panic 4:Silk Hat 5: 6: 7: 8: 
 
             for record in db.table("ddr_scores_best").search(
                 (where("game_version") == game_version) & (where("ddr_id") == ddr_id)
@@ -114,7 +117,9 @@ async def usergamedata_advanced(request: Request):
 
         league_name = b64encode(str.encode("Monkey Business")).decode()
         current_time = round(time.time()) * 1000
-
+        #user_bpl_team_id = "4"
+        # 0: 1: 2: 3:Game Panic 4:Silk Hat 5: 6: 7: 8: 
+        
         response = E.response(
             E.playerdata_2(
                 E.result(0, __type="s32"),
@@ -123,7 +128,7 @@ async def usergamedata_advanced(request: Request):
                 E.eventdata_count_all(0, __type="s16"),
                 E.opt_timing_disp(opt_timing_disp, __type="s32"),
                 E.bpl_season_id(1, __type="s8"),
-                E.bpl_team_id(7, __type="s8"),
+                E.bpl_team_id(user_bpl_team_id, __type="s8"),
                 E.bpl_user_type(1, __type="s8"),
                 *[
                     E.music(
@@ -410,6 +415,8 @@ async def usergamedata_advanced(request: Request):
                 double_grade, game_profile.get("double_grade", double_grade)
             )
             game_profile["opt_timing_disp"] = opt_timing_disp
+
+            game_profile["user_bpl_team_id"] = user_bpl_team_id
 
             profile["version"][str(game_version)] = game_profile
             db.table("ddr_profile").upsert(profile, where("card") == refid)
