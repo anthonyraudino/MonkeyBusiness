@@ -418,7 +418,6 @@ async def playerdata_2_usergamedata_advanced(request: Request):
             )
             game_profile["opt_timing_disp"] = opt_timing_disp
 
-            user_bpl_team_id = 0  # Initialize with a default value
             game_profile["user_bpl_team_id"] = user_bpl_team_id
 
             profile["version"][str(game_version)] = game_profile
